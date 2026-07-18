@@ -3,7 +3,7 @@ import { SignalPill } from "./SignalPill";
 
 const display = (value: string | number | null) => value ?? "Not captured";
 
-export function BookingDetails({ analysis }: { analysis: Analysis }) {
+export function BookingDetails({ analysis, mode }: { analysis: Analysis; mode: "demo" | "live" }) {
   const { draft, address_validations, flight } = analysis;
   return <div className="detail-stack">
     <section className="card detail-card">
@@ -16,7 +16,7 @@ export function BookingDetails({ analysis }: { analysis: Analysis }) {
         <div><dt>Guests</dt><dd>{display(draft.passengers)} passengers · {display(draft.luggage)} luggage</dd></div><div><dt>Flight</dt><dd>{display(draft.flight_number)}</dd></div>
       </dl>
     </section>
-    {flight && <section className="card flight-card"><div><span className="section-kicker">LIVE FLIGHT SIGNAL</span><h3>{flight.number} · {flight.status}</h3></div><div className="flight-meta"><span>ARRIVES <b>{flight.arrival_time}</b></span><span>TERMINAL <b>{flight.terminal}</b></span><span>GATE <b>{flight.gate}</b></span></div></section>}
+    {flight && <section className="card flight-card"><div><span className="section-kicker">{mode === "live" ? "LIVE" : "DEMO"} FLIGHT SIGNAL</span><h3>{flight.number} · {flight.status}</h3></div><div className="flight-meta"><span>ARRIVES <b>{flight.arrival_time}</b></span><span>TERMINAL <b>{flight.terminal}</b></span><span>GATE <b>{flight.gate}</b></span></div></section>}
     {analysis.warnings.length > 0 && <section className="warning-card"><b>Dispatcher attention</b>{analysis.warnings.map((warning) => <p key={warning}>{warning}</p>)}</section>}
   </div>;
 }

@@ -142,5 +142,9 @@ invent addresses, flight status, terminals, gates, dates, or missing facts."""
         return build_analysis(draft, OneMapAddressService())
 
 
-def get_orchestrator() -> OpenAIOrchestrator | RuleBasedOrchestrator:
-    return OpenAIOrchestrator() if settings.has_openai else RuleBasedOrchestrator()
+def get_orchestrator(mode: str) -> OpenAIOrchestrator | RuleBasedOrchestrator:
+    if mode == "demo":
+        return RuleBasedOrchestrator()
+    if not settings.has_openai:
+        raise RuntimeError("Live mode requires OPENAI_API_KEY to be configured on the FastAPI server.")
+    return OpenAIOrchestrator()

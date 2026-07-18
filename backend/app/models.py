@@ -6,6 +6,7 @@ from pydantic import BaseModel, Field
 
 BookingType = Literal["airport_arrival", "airport_departure", "point_to_point", "hourly_charter"]
 BookingStatus = Literal["pending_approval", "approved", "rejected"]
+MessageSender = Literal["customer", "agent", "dispatcher"]
 
 
 class AnalyzeRequest(BaseModel):
@@ -42,6 +43,11 @@ class AnalysisResult(BaseModel):
     confidence: int = Field(ge=0, le=100)
 
 
+class CreateBookingRequest(BaseModel):
+    analysis: AnalysisResult
+    customer_message: str = Field(min_length=1, max_length=2000)
+
+
 class Booking(BookingDraft):
     id: str
     status: BookingStatus
@@ -49,3 +55,11 @@ class Booking(BookingDraft):
     confidence: int
     dispatcher_summary: str
     flight: FlightInfo | None = None
+
+
+class Message(BaseModel):
+    id: str
+    booking_id: str
+    sender: MessageSender
+    content: str
+    created_at: datetime
