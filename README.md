@@ -278,4 +278,4 @@ All generated code and supporting materials were reviewed, tested, integrated, a
 
 ## License
 
-This project does not currently include a license. Add a license file before distributing or reusing the code outside the hackathon context.
+This project is licensed under the [MIT License](LICENSE). See [LICENSE](LICENSE) for the full terms.
