@@ -132,6 +132,8 @@ The following screenshots show the Live Mode workflow reaching its configured in
 
 ![OpenAI Responses API logs for DispatchAI booking analysis](docs/screenshots/openai-response-logs.jpg)
 
+![OpenAI structured booking extraction response](docs/screenshots/openai-structured-booking-extraction.jpg)
+
 ![Supabase bookings table populated by DispatchAI Live Mode](docs/screenshots/supabase-bookings-table.jpg)
 
 ![Supabase messages table populated by DispatchAI Live Mode](docs/screenshots/supabase-messages-table.jpg)
