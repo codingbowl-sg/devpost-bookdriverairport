@@ -80,6 +80,16 @@ Typical flow: a customer message is analyzed into a booking draft; FastAPI valid
 
 The following captures use the same realistic airport-arrival request in a 1440 × 1050 browser viewport. The extraction views show verified Singapore address results; Demo Mode uses its deterministic workflow, while Live Mode uses the configured OpenAI, OneMap, and Supabase integrations.
 
+## Demo Video
+
+<video src="docs/demo/dispatchai-demo.mp4" poster="docs/screenshots/demo/01-home.png" width="960" controls>
+  Your browser does not support embedded video. Download or open the demo using the link below.
+</video>
+
+[Watch the 2 minute 55 second DispatchAI demo video](docs/demo/dispatchai-demo.mp4)
+
+The video is exported as a 1920 × 1080 MP4 and includes concise on-screen captions for the Demo Mode and Live Mode workflows.
+
 ## Demo Mode
 
 ### Home

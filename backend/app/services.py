@@ -41,10 +41,13 @@ class OneMapAddressService:
 
     endpoint = "https://www.onemap.gov.sg/api/common/elastic/search"
 
+    def __init__(self, use_live_service: bool = True) -> None:
+        self.use_live_service = use_live_service
+
     def validate(self, value: str | None) -> tuple[str | None, bool, str | None]:
         if not value:
             return None, False, None
-        if not settings.has_onemap:
+        if not self.use_live_service or not settings.has_onemap:
             normalized, valid = normalize_location(value)
             print(f"Validating address '{value}' without OneMap (normalized to '{normalized}')...")
             return normalized, valid, None
@@ -112,7 +115,9 @@ class RuleBasedOrchestrator:
             luggage=int(luggage_match.group(1)) if luggage_match else None,
             booking_type=booking_type,
         )
-        return build_analysis(draft, OneMapAddressService())
+        # Demo mode must remain deterministic even when Live-mode credentials
+        # are present in the environment.
+        return build_analysis(draft, OneMapAddressService(use_live_service=False))
 
 
 class OpenAIOrchestrator:

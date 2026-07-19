@@ -1,0 +1,32 @@
+[Script Info]
+Title: DispatchAI demo captions
+ScriptType: v4.00+
+PlayResX: 1920
+PlayResY: 1080
+WrapStyle: 2
+ScaledBorderAndShadow: yes
+
+[V4+ Styles]
+Format: Name,Fontname,Fontsize,PrimaryColour,SecondaryColour,OutlineColour,BackColour,Bold,Italic,Underline,StrikeOut,ScaleX,ScaleY,Spacing,Angle,BorderStyle,Outline,Shadow,Alignment,MarginL,MarginR,MarginV,Encoding
+Style: Caption,Arial,40,&H00FFFFFF,&H000000FF,&H00000000,&H99000000,-1,0,0,0,100,100,0,0,3,14,0,2,120,120,70,1
+
+[Events]
+Format: Layer,Start,End,Style,Name,MarginL,MarginR,MarginV,Effect,Text
+Dialogue: 0,0:00:00.00,0:00:03.00,Caption,,0,0,0,,DispatchAI – AI Operations Agent for Chauffeur Booking
+Dialogue: 0,0:00:08.00,0:00:11.00,Caption,,0,0,0,,Demo Mode – Deterministic AI workflow for reliable demonstrations
+Dialogue: 0,0:00:16.00,0:00:19.00,Caption,,0,0,0,,Customer submits a booking request
+Dialogue: 0,0:00:28.00,0:00:31.00,Caption,,0,0,0,,AI analyzes the natural-language message
+Dialogue: 0,0:00:38.00,0:00:41.00,Caption,,0,0,0,,AI extracts structured booking information
+Dialogue: 0,0:00:48.00,0:00:51.00,Caption,,0,0,0,,Address validation using demo data
+Dialogue: 0,0:00:58.00,0:01:01.00,Caption,,0,0,0,,Booking draft created
+Dialogue: 0,0:01:08.00,0:01:11.00,Caption,,0,0,0,,Dispatcher reviews the booking
+Dialogue: 0,0:01:17.00,0:01:20.00,Caption,,0,0,0,,Status: Pending Approval
+Dialogue: 0,0:01:27.00,0:01:30.00,Caption,,0,0,0,,Human approval completes the booking
+Dialogue: 0,0:01:35.00,0:01:38.00,Caption,,0,0,0,,Live Mode – OpenAI, OneMap, and Supabase
+Dialogue: 0,0:01:45.00,0:01:48.00,Caption,,0,0,0,,Processing a real booking request
+Dialogue: 0,0:01:55.00,0:01:58.00,Caption,,0,0,0,,GPT-5.6 extracts booking details
+Dialogue: 0,0:02:05.00,0:02:08.00,Caption,,0,0,0,,OneMap validates Singapore addresses
+Dialogue: 0,0:02:15.00,0:02:18.00,Caption,,0,0,0,,Booking saved to Supabase
+Dialogue: 0,0:02:25.00,0:02:28.00,Caption,,0,0,0,,Dispatcher reviews the live booking
+Dialogue: 0,0:02:36.00,0:02:39.00,Caption,,0,0,0,,Booking approved and ready for operations
+Dialogue: 0,0:02:47.00,0:02:50.00,Caption,,0,0,0,,DispatchAI combines AI reasoning with trusted external services while keeping humans in control.
