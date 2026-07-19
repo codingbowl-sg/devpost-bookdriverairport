@@ -78,14 +78,43 @@ Typical flow: a customer message is analyzed into a booking draft; FastAPI valid
 
 ## Screenshots
 
-Replace these placeholders with project screenshots before publishing to Devpost.
+The following captures use the same realistic airport-arrival request in a 1440 × 1050 browser viewport. The extraction views show verified Singapore address results; Demo Mode uses its deterministic workflow, while Live Mode uses the configured OpenAI, OneMap, and Supabase integrations.
 
-| Screen | Placeholder |
-| --- | --- |
-| Fake WhatsApp | `docs/screenshots/fake-whatsapp.png` — customer booking message and **Analyze request** action. |
-| Dispatcher Dashboard | `docs/screenshots/dispatcher-dashboard.png` — analysis output, validation state, and human-in-the-loop controls. |
-| Booking Card | `docs/screenshots/booking-card.png` — structured fields, flight information, confidence, warnings, and summary. |
-| Booking List | `docs/screenshots/booking-list.png` — pending, approved, and rejected bookings. |
+## Demo Mode
+
+### Home
+
+![DispatchAI Demo Mode home screen](docs/screenshots/demo/01-home.png)
+
+### WhatsApp intake
+
+![DispatchAI Demo Mode WhatsApp-style customer intake](docs/screenshots/demo/02-chat.png)
+
+### AI booking extraction and address validation
+
+![DispatchAI Demo Mode extracted booking with verified addresses](docs/screenshots/demo/03-ai-extraction.png)
+
+### Booking saved for dispatcher approval
+
+![DispatchAI Demo Mode pending booking ready for approval](docs/screenshots/demo/04-booking.png)
+
+## Live Mode
+
+### Home
+
+![DispatchAI Live Mode home screen](docs/screenshots/live/01-home.png)
+
+### WhatsApp intake
+
+![DispatchAI Live Mode WhatsApp-style customer intake](docs/screenshots/live/02-chat.png)
+
+### AI booking extraction and OneMap address validation
+
+![DispatchAI Live Mode extracted booking with verified OneMap addresses](docs/screenshots/live/03-ai-extraction.png)
+
+### Booking saved for dispatcher approval
+
+![DispatchAI Live Mode pending booking ready for approval](docs/screenshots/live/04-booking.png)
 
 ## Tech Stack
 
