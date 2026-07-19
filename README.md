@@ -262,6 +262,20 @@ The following are planned enhancements, not features currently implemented:
 - Add evaluation datasets, extraction quality metrics, and feedback loops from dispatcher corrections.
 - Support multilingual messages and configurable service areas beyond Singapore.
 
+## Built with Codex & GPT-5.6
+
+### GPT-5.6
+
+In Live Mode, DispatchAI uses GPT-5.6 as its language-understanding and reasoning engine. It interprets natural-language customer booking messages and extracts the structured booking information that the workflow needs, including customer details, booking type, pickup, destination, flight number, timing, passengers, and luggage. That structured result enables DispatchAI to identify missing booking details, prepare a dispatcher summary, and support the Live Mode booking workflow.
+
+GPT-5.6 is deliberately limited to language understanding and reasoning. It must not invent addresses, flight information, terminals, gates, or other operational facts. DispatchAI verifies those facts through external services: OneMap validates Singapore addresses, the flight service supplies flight details, and Supabase persists Live Mode bookings when configured. Demo Mode uses a deterministic extraction and validation path for reliable offline-friendly demonstrations.
+
+### Codex
+
+Codex accelerated development across the project by assisting with React frontend components, FastAPI backend endpoints, and the integrations for GPT-5.6, OneMap, and Supabase. It also supported refactoring and debugging, architectural improvements, documentation and README generation, project screenshots, and preparation of the demo assets and overall hackathon submission.
+
+All generated code and supporting materials were reviewed, tested, integrated, and adapted by the project author before inclusion in DispatchAI.
+
 ## License
 
 This project does not currently include a license. Add a license file before distributing or reusing the code outside the hackathon context.
