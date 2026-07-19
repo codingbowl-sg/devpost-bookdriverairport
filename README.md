@@ -1,74 +1,228 @@
 # DispatchAI
 
-An AI Operations Agent that turns customer WhatsApp messages into validated, human-approved chauffeur booking drafts.
+> **An AI Operations Agent that turns natural-language customer messages into validated, human-approved chauffeur booking drafts.**
 
-## Demo flow
+Built for **OpenAI Build Week** · **Work & Productivity** track
 
-1. Paste or use the pre-filled customer request in the WhatsApp intake.
-2. Click **Analyze request** to extract booking fields, validate locations, look up the mock flight, and create a dispatcher handoff.
-3. Create a pending booking, then approve or reject it in the dispatch console.
+## Overview
 
-Both modes use the FastAPI API. Demo mode selects deterministic fixtures on the server; Live mode selects the OpenAI-powered extractor and production integrations. This keeps the frontend and backend behavior aligned.
+DispatchAI helps chauffeur-dispatch teams turn conversational customer requests into a structured operational handoff. A dispatcher can paste a WhatsApp-style message, review the AI's extracted booking details and validation results, create a booking draft, and approve or reject it—all without losing human oversight.
 
-## Run locally
-Note: Run /api/health to check its health status.
-It should show: {"status":"ok","modes":["demo","live"]}
+The project supports two operating modes:
 
-```powershell
-Copy-Item .env.example .env
-python -m venv .venv
-.\.venv\Scripts\Activate.ps1
-pip install -r backend/requirements.txt
-uvicorn app.main:app --reload --app-dir backend
+| Mode | Purpose | Behavior |
+| --- | --- | --- |
+| **Demo** | Reliable hackathon demonstration | Uses deterministic server-side extraction, address fixtures, mock flight data, and in-memory bookings. |
+| **Live** | Production integration path | Uses OpenAI for field extraction, OneMap when configured for address validation, and Supabase for booking persistence when configured. |
+
+## Problem
+
+Chauffeur booking requests often arrive as unstructured messages: flight numbers, pickup times, passenger counts, luggage, and destinations are mixed into informal language. Dispatchers must manually interpret the message, verify addresses and flight details, re-enter the data into operations tools, and decide whether the request needs a follow-up.
+
+That manual workflow is repetitive, slow during busy periods, and vulnerable to missed or ambiguous details. It also forces dispatchers to spend attention on transcription rather than exception handling and customer service.
+
+## Solution
+
+DispatchAI converts the first pass of dispatch work into a reviewable workflow. It extracts the booking fields that matter, validates operational facts through the appropriate integrations, flags missing details or risks, and presents a concise dispatcher summary. The final decision remains with a human dispatcher.
+
+## Features
+
+Implemented in this repository:
+
+- WhatsApp-style customer intake with an editable customer message.
+- AI-assisted extraction of customer name, booking type, date, pickup time, pickup, destination, flight number, passenger count, and luggage.
+- OpenAI-powered extraction in Live mode, using the configured `OPENAI_MODEL` (default: `gpt-5.6`).
+- Deterministic, offline-friendly extraction for Demo mode.
+- Singapore address validation through OneMap when an access token is configured, with a deterministic demo fallback.
+- Mock flight lookup for supported flight numbers, returning status, arrival time, terminal, and gate.
+- Dispatcher-facing booking details, confidence, warnings, follow-up prompt, and operational summary.
+- Creation of bookings in a `pending_approval` state.
+- Human approval or rejection of booking drafts.
+- Booking message history for customer, agent, and dispatcher events.
+- Supabase-backed booking and message persistence in Live mode when Supabase credentials are configured.
+- Health endpoint and a small REST API for analysis, bookings, flight lookup, and messages.
+
+## Architecture Diagram
+
+```mermaid
+flowchart TD
+    Customer[Customer] -->|Natural-language booking message| Frontend[React Frontend\nTypeScript · Vite · Tailwind CSS · shadcn/ui]
+    Frontend -->|Analyze / create / approve| Backend[FastAPI Backend]
+
+    Backend -->|Structured booking extraction| GPT[OpenAI GPT-5.6]
+    Backend -->|Singapore address validation| OneMap[OneMap API]
+    Backend -->|Flight status lookup| Flight[Mock Flight API]
+    Backend -->|Live booking & message persistence| Supabase[(Supabase PostgreSQL)]
+
+    GPT --> Backend
+    OneMap --> Backend
+    Flight --> Backend
+    Backend -->|Review-ready draft| Frontend
 ```
+
+## AI Workflow
+
+DispatchAI deliberately separates language reasoning from operational truth.
+
+| Component | Responsibility |
+| --- | --- |
+| **GPT-5.6 (LLM)** | Interprets the customer's language and extracts a structured booking draft. It is instructed to leave unknown fields as `null` and not invent addresses, dates, flight status, terminals, or gates. |
+| **FastAPI** | Orchestrates the workflow: selects Demo or Live mode, calls the extractor, validates addresses, looks up flights, calculates the review result, and exposes booking and approval APIs. |
+| **OneMap** | Validates and normalizes Singapore addresses in Live mode when `ONEMAP_ACCESS_TOKEN` is present. |
+| **Mock Flight API** | Returns the authoritative demo flight record for supported flight numbers, including status, terminal, gate, and arrival time. |
+| **Supabase** | Persists Live-mode booking drafts and their associated customer, agent, and dispatcher messages. |
+
+> **The LLM performs reasoning and information extraction while external APIs remain the source of truth.**
+
+Typical flow: a customer message is analyzed into a booking draft; FastAPI validates its pickup and destination, retrieves available flight information, identifies missing details or warnings, and returns a dispatcher-ready review. Only after the dispatcher creates and approves the draft is the booking decision finalized.
+
+## Screenshots
+
+Replace these placeholders with project screenshots before publishing to Devpost.
+
+| Screen | Placeholder |
+| --- | --- |
+| Fake WhatsApp | `docs/screenshots/fake-whatsapp.png` — customer booking message and **Analyze request** action. |
+| Dispatcher Dashboard | `docs/screenshots/dispatcher-dashboard.png` — analysis output, validation state, and human-in-the-loop controls. |
+| Booking Card | `docs/screenshots/booking-card.png` — structured fields, flight information, confidence, warnings, and summary. |
+| Booking List | `docs/screenshots/booking-list.png` — pending, approved, and rejected bookings. |
+
+## Tech Stack
+
+| Layer | Technologies |
+| --- | --- |
+| Frontend | React, TypeScript, Vite, Tailwind CSS, shadcn/ui |
+| Backend | FastAPI (Python) |
+| Database | Supabase PostgreSQL |
+| AI | OpenAI GPT-5.6 |
+| External services | OneMap API, Mock Flight API |
+
+## Installation
+
+### Prerequisites
+
+- Node.js 18+ and npm
+- Python 3.10+
+- An OpenAI API key only for Live mode
+
+### Frontend
 
 ```bash
-# Copy the file
-cp .env.example .env
+npm install
+```
 
-# Create the virtual environment
+### Backend
+
+```bash
 python3 -m venv .venv
-# Activate the virtual environment
 source .venv/bin/activate
-# Install dependencies
 pip install -r backend/requirements.txt
-# Run the application
+```
+
+On Windows PowerShell, activate the environment with:
+
+```powershell
+.\.venv\Scripts\Activate.ps1
+```
+
+### Environment variables
+
+Copy the example file, then add the credentials required for the mode you plan to use:
+
+```bash
+cp .env.example .env
+```
+
+```dotenv
+# Optional when the frontend and API run on different origins
+VITE_API_URL=
+
+# Required for Live extraction
+OPENAI_API_KEY=
+OPENAI_MODEL=gpt-5.6
+
+# Required for Live OneMap address validation
+ONEMAP_ACCESS_TOKEN=
+
+# Required for Live Supabase persistence
+SUPABASE_URL=
+SUPABASE_KEY=
+```
+
+### Run locally
+
+Start the FastAPI server from the repository root:
+
+```bash
 uvicorn app.main:app --reload --app-dir backend
 ```
 
-In a second terminal:
+In a second terminal, start the frontend:
 
-```powershell
-npm install
+```bash
 npm run dev
 ```
 
-Open `http://localhost:5173`.
+Open [http://localhost:5173](http://localhost:5173). Confirm that the API is available at [http://localhost:8000/api/health](http://localhost:8000/api/health); it should return the supported `demo` and `live` modes.
 
-## Architecture
+For Supabase persistence, apply [`supabase/schema.sql`](supabase/schema.sql) to a new project. Existing projects that predate the `flight` field also need [`supabase/migrations/20260714_add_booking_flight.sql`](supabase/migrations/20260714_add_booking_flight.sql).
 
-- `src/presentation`: React UI components and view state.
-- `src/domain`: shared frontend domain types.
-- `src/data`: frontend HTTP client.
-- `backend/app/main.py`: FastAPI routes and API contract.
-- `backend/app/services.py`: AI orchestration and authoritative flight/address adapter seam.
-- `backend/app/repository.py`: persistence abstraction; in-memory demo store today, Supabase replacement seam for deployment.
-- `supabase/schema.sql`: production database schema for bookings and messages.
+## Production Integration Notes
 
-## Production integration notes
+| Variable | Used for | Notes |
+| --- | --- | --- |
+| `OPENAI_API_KEY` | Live LLM extraction | Keep server-side only. Live analysis returns a configuration error if it is absent. |
+| `OPENAI_MODEL` | Selects the OpenAI model | Defaults to `gpt-5.6`. |
+| `ONEMAP_ACCESS_TOKEN` | Live Singapore address validation | Keep server-side only; OneMap Search API tokens expire and must be refreshed. |
+| `SUPABASE_URL` | Supabase project connection | Required with `SUPABASE_KEY` to enable persistence. |
+| `SUPABASE_KEY` | Supabase server access | Use a restricted server-side key in production; never expose it to the browser. |
 
-Set `OPENAI_API_KEY`, `ONEMAP_ACCESS_TOKEN`, and Supabase credentials in `.env`. OneMap Search API tokens expire after three days and should be stored server-side. Demo requests always use deterministic server-side fixtures and an in-memory booking store. Live requests require `OPENAI_API_KEY` and use the OpenAI Responses API with `OPENAI_MODEL`; when `SUPABASE_URL` and `SUPABASE_KEY` are configured, live bookings persist to Supabase. A Live request without an OpenAI key returns a clear 503 configuration error.
+**Demo mode** is designed for a dependable walkthrough. It uses FastAPI, deterministic extraction and validation fixtures, the mock flight service, and an in-memory booking store. It does not require OpenAI, OneMap, or Supabase credentials.
 
-OneMap remains the source of truth for real address validation and a flight provider remains the source of truth for flight status. The reasoning model must not invent either data source.
+**Live mode** sends extraction to OpenAI. If configured, OneMap validates addresses and Supabase stores bookings and messages. The backend retains ownership of all secrets and integration calls; the frontend communicates only with the FastAPI API.
 
-For an existing Supabase project created from an earlier schema revision, run `supabase/migrations/20260714_add_booking_flight.sql` in the Supabase SQL Editor before enabling live persistence.
+## Devpost Submission
 
-## API
+### What it does
 
-- `POST /api/analyze` — accepts `{ "message": "..." }` and an `X-Dispatch-Mode: demo|live` header; returns extraction, validations, risks, summary, confidence.
-- `GET /api/mock-flight/{flightNumber}` — mock authoritative flight lookup.
-- `POST /api/bookings` — persists an analyzed booking and its customer message as `pending_approval`.
-- `GET /api/bookings` — returns persisted bookings.
-- `GET /api/messages` — returns all messages for the selected mode, newest first.
-- `PATCH /api/bookings/{id}/status?status=approved` — dispatcher decision.
-- `GET /api/bookings/{id}/messages` — returns the customer, agent, and dispatcher messages for a booking.
+DispatchAI is an AI Operations Agent for chauffeur dispatch teams. It transforms a natural-language customer message into a structured booking draft, validates addresses, retrieves flight information, flags missing details, and prepares a clear dispatcher handoff. A human dispatcher then creates the draft and approves or rejects it, keeping the final operational decision in human hands.
+
+### Inspiration
+
+Travel and chauffeur operations are full of valuable but messy customer messages. A single WhatsApp request can contain a flight, arrival time, passenger count, luggage, and hotel destination—yet someone still has to read, verify, and retype it before the ride can be arranged. We wanted to show how an AI agent can remove that repetitive first pass while preserving the judgment that matters most in real operations.
+
+### How we built it
+
+We built a React, TypeScript, and Vite frontend around a WhatsApp-style intake and dispatcher review experience. A FastAPI backend orchestrates the workflow. In Live mode, OpenAI GPT-5.6 extracts a structured booking draft from the customer message. FastAPI then validates Singapore addresses with OneMap when configured, retrieves flight details through a mock flight service, prepares warnings and a dispatcher summary, and persists Live-mode bookings and messages to Supabase. Demo mode uses deterministic server-side fixtures so the end-to-end flow remains reliable for a hackathon presentation.
+
+### Challenges we ran into
+
+The hardest design challenge was deciding what the model should do—and what it should not do. Booking messages are ambiguous, but operational facts such as an address, flight status, terminal, and gate must be verified rather than guessed. We also needed a demo that was dependable without pretending it was a full production integration, which led to an explicit Demo/Live mode split.
+
+### Accomplishments that we're proud of
+
+We created a complete path from informal message to human-approved booking draft, rather than stopping at a chat response. We are especially proud of the separation between LLM extraction and external validation, the clear dispatcher-facing warnings and follow-up prompts, and the ability to run a deterministic demo while retaining a practical path to OpenAI, OneMap, and Supabase integrations.
+
+### What we learned
+
+We learned that useful operations agents need more than extraction quality: they need explicit boundaries, auditable handoffs, and graceful handling of missing information. The LLM is effective at understanding language, while external systems should retain ownership of factual data. Human review is not an afterthought—it is a core product capability for high-consequence workflow decisions.
+
+### What's next
+
+Next, we want to connect DispatchAI to real messaging and flight providers, expand address and service-area validation, and deepen the dispatcher workflow with assignment and operational monitoring. We would also evaluate the extraction and validation pipeline against real, anonymized booking requests before using it in production.
+
+## Future Improvements
+
+The following are planned enhancements, not features currently implemented:
+
+- Integrate a real messaging channel such as WhatsApp Business for inbound and outbound communication.
+- Replace the mock flight service with a live flight-data provider and support proactive disruption alerts.
+- Add vehicle, driver, availability, and route-assignment workflows.
+- Add role-based access control, audit logs, and production-grade observability.
+- Add automated follow-up messages for missing booking details, subject to dispatcher controls.
+- Add evaluation datasets, extraction quality metrics, and feedback loops from dispatcher corrections.
+- Support multilingual messages and configurable service areas beyond Singapore.
+
+## License
+
+This project does not currently include a license. Add a license file before distributing or reusing the code outside the hackathon context.
