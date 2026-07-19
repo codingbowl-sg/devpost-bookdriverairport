@@ -126,6 +126,16 @@ The video is exported as a 1920 × 1080 MP4 and includes concise on-screen capti
 
 ![DispatchAI Live Mode pending booking ready for approval](docs/screenshots/live/04-booking.png)
 
+### Live integration evidence
+
+The following screenshots show the Live Mode workflow reaching its configured integrations: OpenAI receives booking-analysis requests, while Supabase persists booking drafts and their message history.
+
+![OpenAI Responses API logs for DispatchAI booking analysis](docs/screenshots/openai-response-logs.jpg)
+
+![Supabase bookings table populated by DispatchAI Live Mode](docs/screenshots/supabase-bookings-table.jpg)
+
+![Supabase messages table populated by DispatchAI Live Mode](docs/screenshots/supabase-messages-table.jpg)
+
 ## Tech Stack
 
 | Layer | Technologies |
