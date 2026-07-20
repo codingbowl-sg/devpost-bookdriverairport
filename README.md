@@ -82,11 +82,7 @@ The following captures use the same realistic airport-arrival request in a 1440 
 
 ## Demo Video
 
-<video src="https://youtu.be/Ek_4kYn_wAA" poster="docs/screenshots/demo/01-home.png" width="960" controls>
-  Your browser does not support embedded video. Download or open the demo using the link below.
-</video>
-
-[Watch the 2 minute 55 second DispatchAI demo video](docs/demo/dispatchai-demo.mp4)
+[![Watch the 2 minute 55 second DispatchAI demo video](docs/screenshots/demo/01-home.png)](https://youtu.be/Ek_4kYn_wAA)
 
 The video is exported as a 1920 × 1080 MP4 and includes concise on-screen captions for the Demo Mode and Live Mode workflows.
 
