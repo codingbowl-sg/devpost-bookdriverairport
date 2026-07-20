@@ -82,7 +82,7 @@ The following captures use the same realistic airport-arrival request in a 1440 
 
 ## Demo Video
 
-<video src="docs/demo/dispatchai-demo.mp4" poster="docs/screenshots/demo/01-home.png" width="960" controls>
+<video src="https://youtu.be/Ek_4kYn_wAA" poster="docs/screenshots/demo/01-home.png" width="960" controls>
   Your browser does not support embedded video. Download or open the demo using the link below.
 </video>
 
